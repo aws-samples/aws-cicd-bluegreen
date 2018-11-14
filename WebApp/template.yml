@@ -1,0 +1,748 @@
+# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  AWS CloudFormation Sample Template ELBWithLockedDownAutoScaledInstances:
+  Create a load balanced, Auto Scaled sample website where the instances are
+  locked down to only accept traffic from the load balancer. This example
+  creates an Auto Scaling group behind a load balancer with a simple health
+  check. **WARNING** This template
+  creates one or more Amazon EC2 instances and an Application Load Balancer. You
+  will be billed for the AWS resources used if you create a stack from this
+  template.
+
+Mappings:
+  VPCIpSpace:
+    us-east-1:
+      RANGE: '10.42'
+    us-east-2:
+      RANGE: '10.43'
+    us-west-2:
+      RANGE: '10.42'
+    us-west-1:
+      RANGE: '10.43'
+    ap-northeast-1:
+      RANGE: '10.42'
+    ap-northeast-2:
+      RANGE: '10.43'
+    ap-south-1:
+      RANGE: '10.44'
+    ap-southeast-1:
+      RANGE: '10.42'
+    ap-southeast-2:
+      RANGE: '10.43'
+    ca-central-1:
+      RANGE: '10.42'
+    eu-central-1:
+      RANGE: '10.42'
+    eu-west-1:
+      RANGE: '10.42'
+    eu-west-2:
+      RANGE: '10.43'
+    sa-east-1:
+      RANGE: '10.42'
+  SubnetTypeIpRanges:
+    public:
+      RANGE: 0.0/17
+  publicSubnetConfig:
+    publicSubnet01:
+      CIDR: 10.0/24
+    publicSubnet02:
+      CIDR: 11.0/24   
+  privateSubnetConfig:
+    privateSubnet01:
+      CIDR: 20.0/24
+    privateSubnet02:
+      CIDR: 21.0/24         
+  instancesTypes:
+    Demo:
+      INST: t2.small
+  AWSInstanceType2Arch:
+    t1.micro:
+      Arch: HVM64
+    t2.nano:
+      Arch: HVM64
+    t2.micro:
+      Arch: HVM64
+    t2.small:
+      Arch: HVM64
+    t2.medium:
+      Arch: HVM64
+    t2.large:
+      Arch: HVM64    
+  AWSRegionArch2AMI:
+    us-east-1:
+      HVM64: ami-0ff8a91507f77f867
+      HVMG2: ami-0a584ac55a7631c0c
+    us-west-2:
+      HVM64: ami-0303c7b2e7066b60d
+      HVMG2: ami-0e09505bc235aa82d
+    us-west-1:
+      HVM64: ami-0bdb828fd58c52235
+      HVMG2: ami-066ee5fd4a9ef77f1
+    eu-west-1:
+      HVM64: ami-047bb4163c506cd98
+      HVMG2: ami-0a7c483d527806435
+    eu-west-2:
+      HVM64: ami-f976839e
+      HVMG2: NOT_SUPPORTED
+    eu-west-3:
+      HVM64: ami-0ebc281c20e89ba4b
+      HVMG2: NOT_SUPPORTED
+    eu-central-1:
+      HVM64: ami-0233214e13e500f77
+      HVMG2: ami-06223d46a6d0661c7
+    ap-northeast-1:
+      HVM64: ami-06cd52961ce9f0d85
+      HVMG2: ami-053cdd503598e4a9d
+    ap-northeast-2:
+      HVM64: ami-0a10b2721688ce9d2
+      HVMG2: NOT_SUPPORTED
+    ap-northeast-3:
+      HVM64: ami-0d98120a9fb693f07
+      HVMG2: NOT_SUPPORTED
+    ap-southeast-1:
+      HVM64: ami-08569b978cc4dfa10
+      HVMG2: ami-0be9df32ae9f92309
+    ap-southeast-2:
+      HVM64: ami-09b42976632b27e9b
+      HVMG2: ami-0a9ce9fecc3d1daf8
+    ap-south-1:
+      HVM64: ami-0912f71e06545ad88
+      HVMG2: ami-097b15e89dbdcfcf4
+    us-east-2:
+      HVM64: ami-0b59bfac6be064b78
+      HVMG2: NOT_SUPPORTED
+    ca-central-1:
+      HVM64: ami-0b18956f
+      HVMG2: NOT_SUPPORTED
+    sa-east-1:
+      HVM64: ami-07b14488da8ea02a0
+      HVMG2: NOT_SUPPORTED
+    cn-north-1:
+      HVM64: ami-0a4eaf6c4454eda75
+      HVMG2: NOT_SUPPORTED
+    cn-northwest-1:
+      HVM64: ami-6b6a7d09
+      HVMG2: NOT_SUPPORTED
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 
+        Fn::Join: 
+          - ''
+          - - Fn::FindInMap: 
+              - VPCIpSpace
+              - Ref: 'AWS::Region'
+              - RANGE
+            - .
+            - 0.0/16      
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'true'
+      InstanceTenancy: default
+      Tags:
+      - Key: Name
+        Value: 
+          Fn::Sub: ${AWS::StackName}-vpc
+  PublicSubnet01:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: VPC
+      CidrBlock:
+        Fn::Join:
+          - ''
+          - - Fn::FindInMap: 
+                - VPCIpSpace
+                - Ref: 'AWS::Region'
+                - RANGE
+            - .
+            - Fn::FindInMap: 
+                - publicSubnetConfig
+                - publicSubnet01
+                - CIDR      
+      AvailabilityZone: 
+        Fn::Select:
+          - '0'
+          - Fn::GetAZs:
+              Ref: AWS::Region
+      Tags:
+      - Key: Name
+        Value: 
+          Fn::Sub: ${AWS::StackName}-subnetpublic01   
+  PublicSubnet02:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: VPC
+      CidrBlock:
+        Fn::Join:
+          - ''
+          - - Fn::FindInMap: 
+                - VPCIpSpace
+                - Ref: 'AWS::Region'
+                - RANGE
+            - .
+            - Fn::FindInMap: 
+                - publicSubnetConfig
+                - publicSubnet02
+                - CIDR 
+      AvailabilityZone: 
+        Fn::Select:
+          - '1'
+          - Fn::GetAZs:
+              Ref: AWS::Region
+      Tags:
+      - Key: Name
+        Value: 
+          Fn::Sub: ${AWS::StackName}-subnetpublic02  
+  InternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties:
+      Tags:
+        - Key: Name
+          Value: 
+            Fn::Sub: ${AWS::StackName}-vpcigw
+  AttachGateway:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      VpcId: 
+        Ref: VPC
+      InternetGatewayId: 
+        Ref: InternetGateway
+  PublicRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: 
+        Ref: VPC
+      Tags:
+        - Key: Name
+          Value: 
+            Fn::Sub: ${AWS::StackName}-PublicRouteTable
+  PublicRoute:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: 
+        Ref: PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: 
+        Ref: InternetGateway
+  PublicSubnetRTAssociation01:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: 
+        Ref: PublicSubnet01
+      RouteTableId: 
+        Ref: PublicRouteTable
+  PublicSubnetRTAssociation02:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: 
+        Ref: PublicSubnet02
+      RouteTableId: 
+        Ref: PublicRouteTable        
+  PublicNetworkAcl:
+    Type: 'AWS::EC2::NetworkAcl'
+    Properties:
+      VpcId: 
+        Ref: VPC
+      Tags:
+        - Key: Name
+          Value: 
+            Fn::Sub: ${AWS::StackName}-PublicNetworkAcl
+  InboundPublicNAclEntry:
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      NetworkAclId: 
+        Ref: PublicNetworkAcl
+      RuleNumber: '2000'
+      Protocol: '-1'
+      RuleAction: allow
+      Egress: 'false'
+      CidrBlock: 0.0.0.0/0
+      PortRange:
+        From: '0'
+        To: '65535'
+  OutboundPublicNetworkAclEntry:
+    Type: 'AWS::EC2::NetworkAclEntry'
+    Properties:
+      NetworkAclId: 
+        Ref: PublicNetworkAcl
+      RuleNumber: '2000'
+      Protocol: '-1'
+      RuleAction: allow
+      Egress: 'true'
+      CidrBlock: 0.0.0.0/0
+      PortRange:
+        From: '0'
+        To: '65535'
+  PublicSubnetNetworkAclAssociation01:
+    Type: 'AWS::EC2::SubnetNetworkAclAssociation'
+    Properties:
+      SubnetId: 
+        Ref: PublicSubnet01
+      NetworkAclId: 
+        Ref: PublicNetworkAcl 
+  PublicSubnetNetworkAclAssociation02:
+    Type: 'AWS::EC2::SubnetNetworkAclAssociation'
+    Properties:
+      SubnetId: 
+        Ref: PublicSubnet02
+      NetworkAclId: 
+        Ref: PublicNetworkAcl                              
+  PrivateSubnet01:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: VPC
+      CidrBlock:
+        Fn::Join:
+          - ''
+          - - Fn::FindInMap: 
+                - VPCIpSpace
+                - Ref: 'AWS::Region'
+                - RANGE
+            - .
+            - Fn::FindInMap: 
+                - privateSubnetConfig
+                - privateSubnet01
+                - CIDR 
+      AvailabilityZone: 
+        Fn::Select:
+          - '0'
+          - Fn::GetAZs:
+              Ref: AWS::Region
+      Tags:
+      - Key: Name
+        Value: 
+          Fn::Sub: ${AWS::StackName}-subnetprivate1 
+  PrivateSubnet02:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: VPC
+      CidrBlock:
+        Fn::Join:
+          - ''
+          - - Fn::FindInMap: 
+                - VPCIpSpace
+                - Ref: 'AWS::Region'
+                - RANGE
+            - .
+            - Fn::FindInMap: 
+                - privateSubnetConfig
+                - privateSubnet02
+                - CIDR 
+      AvailabilityZone: 
+        Fn::Select:
+          - '1'
+          - Fn::GetAZs:
+              Ref: AWS::Region      
+      Tags:
+      - Key: Name
+        Value: 
+          Fn::Sub: ${AWS::StackName}-subnetprivate2               
+  NAT:
+    DependsOn: PublicSubnetNetworkAclAssociation01
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+        - EIP
+        - AllocationId
+      SubnetId:
+        Ref: PublicSubnet01
+      Tags:
+        - Key: Name
+          Value: 
+            Fn::Sub: ${AWS::StackName}-NATGateway
+  EIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+  PrivateRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: 
+        Ref: VPC
+      Tags:
+        - Key: Name
+          Value: 
+            Fn::Sub: ${AWS::StackName}-PrivateRouteTable
+  Route:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: NAT  
+  PrivateSubnetRTAssociation01:
+      Type: 'AWS::EC2::SubnetRouteTableAssociation'
+      Properties:
+        SubnetId: 
+          Ref: PrivateSubnet01
+        RouteTableId: 
+          Ref: PrivateRouteTable
+  PrivateSubnetRTAssociation02:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: 
+        Ref: PrivateSubnet02
+      RouteTableId: 
+        Ref: PrivateRouteTable   
+  WebAppRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole'
+        - 'arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess'
+        - 'arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess'
+        - 'arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM'
+      Path: /
+  S3EncryptionRolePolicies:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: BackendRole
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'elasticloadbalancing:Describe*'
+              - 'elasticloadbalancing:DeregisterTargets'
+              - 'elasticloadbalancing:RegisterTargets'
+              - 'autoscaling:Describe*'
+              - 'autoscaling:EnterStandby'
+              - 'autoscaling:ExitStandby'
+              - 'autoscaling:UpdateAutoScalingGroup'
+              - 'autoscaling:SuspendProcesses'
+              - 'autoscaling:ResumeProcesses'
+            Resource: '*'
+      Roles:
+        - Ref: WebAppRole  
+  WebAppInstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Path: /
+      Roles:
+        - Ref: WebAppRole
+  WebServerGroup:
+    Type: 'AWS::AutoScaling::AutoScalingGroup'    
+    Properties:
+      AutoScalingGroupName: BlueGreenASGroup
+      VPCZoneIdentifier:
+        - Ref: PrivateSubnet01
+        - Ref: PrivateSubnet02
+      LaunchConfigurationName:
+        Ref: LaunchConfig
+      MinSize: '2'
+      MaxSize: '4'
+      TargetGroupARNs:
+      - Ref: ALBTargetGroup
+      DesiredCapacity: '2'
+      Tags:
+      - Key: Name
+        Value: BlueGreenWebHost
+        PropagateAtLaunch: 'true'           
+    CreationPolicy:
+      ResourceSignal:
+        Count: '2'
+        Timeout: PT15M
+    UpdatePolicy:
+      AutoScalingRollingUpdate:
+        MinInstancesInService: '1'
+        MaxBatchSize: '1'
+        PauseTime: PT15M
+        WaitOnResourceSignals: 'true'
+  LaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Metadata:
+      Comment: Install a simple application
+      'AWS::CloudFormation::Init':
+        config:
+          packages:
+            yum:
+              httpd: []
+          files:
+            /home/ec2-user/node-website/app.js:
+              content:
+                'Fn::Join':
+                  - |+
+
+                  - - var http = require('http');
+                    - http.createServer(function (req, res) {
+                    - >-
+                      res.writeHead(200, {'Content-Type': 'text/plain'});
+                      res.end('Hello World!');
+                    - >-
+                      }).listen(80);
+              mode: '000644'
+              owner: root
+              group: root
+            /etc/cfn/cfn-hup.conf:
+              content:
+                'Fn::Join':
+                  - ''
+                  - - |
+                      [main]
+                    - stack=
+                    - Ref: 'AWS::StackId'
+                    - |+
+
+                    - region=
+                    - Ref: 'AWS::Region'
+                    - |+
+
+              mode: '000400'
+              owner: root
+              group: root
+            /etc/cfn/hooks.d/cfn-auto-reloader.conf:
+              content:
+                'Fn::Join':
+                  - ''
+                  - - |
+                      [cfn-auto-reloader-hook]
+                    - |
+                      triggers=post.update
+                    - >
+                      path=Resources.LaunchConfig.Metadata.AWS::CloudFormation::Init
+                    - 'action=/opt/aws/bin/cfn-init -v '
+                    - '         --stack '
+                    - Ref: 'AWS::StackName'
+                    - '         --resource LaunchConfig '
+                    - '         --region '
+                    - Ref: 'AWS::Region'
+                    - |+
+
+                    - |
+                      runas=root
+              mode: '000400'
+              owner: root
+              group: root
+          services:
+              cfn-hup:
+                enabled: 'true'
+                ensureRunning: 'true'
+                files:
+                  - /etc/cfn/cfn-hup.conf
+                  - /etc/cfn/hooks.d/cfn-auto-reloader.conf    
+    Properties: 
+      IamInstanceProfile: 
+        Ref: WebAppInstanceProfile      
+      ImageId: 
+        Fn::FindInMap: 
+          - "AWSRegionArch2AMI"
+          - Ref: "AWS::Region"
+          - Fn::FindInMap: 
+              - "AWSInstanceType2Arch"
+              - Fn::FindInMap: 
+                - instancesTypes
+                - Demo
+                - INST
+              - Arch  
+      UserData:
+        'Fn::Base64':
+          'Fn::Join':
+            - ''
+            - - |
+                #!/bin/bash -xe
+              - |
+                yum install -y git
+              - |
+                yum install -y ruby
+              - |
+                yum update -y aws-cfn-bootstrap
+              - |
+                # Install pip and python dev libraries.
+                yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+              - | 
+                yum install -y python27-devel python27-pip gcc
+              - |
+                yum install -y python-pip
+              - |
+                yum install -y wget
+              - |                              
+                cd /home/ec2-user/
+              - 'wget https://aws-codedeploy-'
+              - !Ref 'AWS::Region'
+              - |
+                .s3.amazonaws.com/latest/install
+              - |
+                chmod +x ./install
+              - |  
+                ./install auto
+              - |
+                service codedeploy-agent start
+              - |
+                # making the website
+                mkdir /home/ec2-user/node-website                              
+              - |+
+              - '/opt/aws/bin/cfn-init -v '
+              - '         --stack '
+              - Ref: 'AWS::StackName'
+              - '         --resource LaunchConfig '
+              - '         --region '
+              - Ref: 'AWS::Region'
+              - |+
+
+              - |
+                #!/bin/bash -xe
+                cd /home/ec2-user/node-website                
+              - |
+                curl -sL https://rpm.nodesource.com/setup_8.x | bash -
+              - |
+                yum install -y nodejs
+              - |
+                npm install forever -g
+              - |
+                export PORT=80
+              - |              
+                forever start app.js
+              - |+
+
+              - '/opt/aws/bin/cfn-signal -e $? '
+              - '         --stack '
+              - Ref: 'AWS::StackName'
+              - '         --resource WebServerGroup '
+              - '         --region '
+              - Ref: 'AWS::Region'
+              - |+              
+      SecurityGroups: 
+        - Ref: "InstanceSecurityGroup"
+      InstanceType: t2.small
+  ApplicationLoadBalancer:
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    Properties:
+      Scheme: internet-facing
+      Subnets:
+        - Ref: PublicSubnet01
+        - Ref: PublicSubnet02
+      SecurityGroups:
+        - Fn::GetAtt: LoadBalancerSecurityGroup.GroupId
+      Tags:
+      - Key: Name
+        Value: 
+          Fn::Sub: ${AWS::StackName}-ALB        
+  ALBListener:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn:
+            Ref: ALBTargetGroup
+      LoadBalancerArn:
+        Ref: ApplicationLoadBalancer
+      Port: '80'
+      Protocol: HTTP
+  ALBTargetGroup:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Properties:
+      Name: 'BlueGreenTG'
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 3
+      Port: 80
+      Protocol: HTTP
+      UnhealthyThresholdCount: 5
+      VpcId:
+        Ref: VPC
+      Tags:
+      - Key: Name
+        Value: 
+          Fn::Sub: ${AWS::StackName}-TG         
+  LoadBalancerSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Enable SSH access and HTTP access on the inbound port
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+      VpcId:
+        Ref: VPC        
+  InstanceSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Enable SSH access and HTTP access on the inbound port
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          SourceSecurityGroupId:
+            'Fn::Select':
+              - 0
+              - 'Fn::GetAtt':
+                  - ApplicationLoadBalancer
+                  - SecurityGroups
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0       
+      VpcId:
+        Ref: VPC
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: 
+        'Fn::Join' :
+          - ''
+          - - build-artifact-bluegreenbucket
+            - '-'          
+            - Ref: 'AWS::Region'
+            - '-'
+            - Ref: 'AWS::AccountId'
+
+      VersioningConfiguration:
+        Status: Enabled
+      Tags:
+        - Key: Name
+          Value: BlueGreen-S3Bucket  
+  DeployTrustRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service:
+                - codedeploy.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole'
+      Path: /               
+Outputs:
+  URL:
+    Description: URL of the website
+    Value:
+      'Fn::Join':
+        - ''
+        - - 'http://'
+          - 'Fn::GetAtt':
+              - ApplicationLoadBalancer
+              - DNSName
+  S3BucketName:
+    Value: 
+      Ref: S3Bucket
+    Description: Bucket to for storing artifacts  
+  DeployRoleArn:
+    Value: 
+      Ref: DeployTrustRole
+    Description: CodeDeploy role Arn              
+  ALBTargetGroup:
+    Value: 
+      'Fn::GetAtt' : ALBTargetGroup.TargetGroupName
+    Description: TargetGroup Name     
+  ASGroup:
+    Value: 
+      Ref: WebServerGroup
+    Description: AutoScaling Group Name                

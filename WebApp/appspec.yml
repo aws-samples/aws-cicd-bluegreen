@@ -1,0 +1,26 @@
+# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+version: 0.0
+os: linux
+files:
+  - source: /app.js
+    destination: /home/ec2-user/node-website
+  - source: /package.json
+    destination: /home/ec2-user/node-website
+  - source: /public/
+    destination: /home/ec2-user/node-website/public
+hooks: 
+  ApplicationStop:
+    - location: scripts/deregister_from_elb.sh
+      timeout: 180
+  BeforeInstall:
+    - location: scripts/stop_server.sh
+      timeout: 180  
+    - location: scripts/beforeInstall.sh
+      timeout: 180
+  AfterInstall:
+    - location: scripts/start_server.sh
+      timeout: 180      
+  ApplicationStart:
+    - location: scripts/register_with_elb.sh
+      timeout: 180
