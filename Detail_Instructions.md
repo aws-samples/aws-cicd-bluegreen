@@ -53,7 +53,7 @@ user:~/environment $ git config credential.helper store
 10. Inside BlueGreenWebApp folder, download the Sample Web App Archive by running the following command from IDE terminal and unzip the archvie.
 
 ```console
-user:~/environment $ wget https://github.com/xxxxxxxxxxxxxxxx/AWSCICDWorkShop/raw/master/WebApp.zip
+user:~/environment $ wget https://github.com/aws-samples/aws-cicd-bluegreen/raw/master/WebApp.zip
 user:~/environment $ unzip WebApp.zip
 user:~/environment $ rm WebApp.zip
 ```
