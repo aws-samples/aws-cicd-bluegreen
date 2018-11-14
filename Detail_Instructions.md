@@ -186,10 +186,10 @@ Click **Create deployment group**
 
      **_Deployment settings_**
      
-         **Deployment group:** BlueGreenWebApp_DeploymentGroup  
-         **Revision type:** My application is stored in Amazon S3  
-         **Revision location:** s3://build-artifact-bluegreenbucket-us-east-1/BlueGreenWebAppBuild.zip   Note: This is the location of the build artifact from your CodeBuild        project.  
-         **Revision file type:** .zip  
+       **Deployment group:** BlueGreenWebApp_DeploymentGroup  
+       **Revision type:** My application is stored in Amazon S3  
+       **Revision location:** s3://build-artifact-bluegreenbucket-us-east-1/BlueGreenWebAppBuild.zip   Note: This is the location of the build artifact from your CodeBuild         project.  
+       **Revision file type:** .zip  
      Leave everything as the default value.
 
 Click **Create deployment**
