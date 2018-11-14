@@ -212,33 +212,32 @@ You are going to configure a CodePipleline to use CodeBuild and CodeDeploy previ
      Enable **Allow AWS CodePipeline to create a service role so it can be used with this new pipeline**  
      * **Artifact Store:** Default location  
 
-* **_Source_**
-    * **Source provider:** AWS CodeCommit
+     **_Source_**
 
-**_AWS CodeCommit_**
+     * **Source provider:** AWS CodeCommit
 
-**Choose a repository:** BlueGreenWebApp  
-**Branch name:** master  
-**Change detection options:** Amazon CloudWatch Events(recommended)  
+     **_AWS CodeCommit_**
 
-**_Build_**
+     * **Choose a repository:** BlueGreenWebApp  
+     * **Branch name:** master  
+     * **Change detection options:** Amazon CloudWatch Events(recommended)  
 
-**Build provider:** AWS CodeBuild
+     **_Build_**
 
-**_AWS CodeBuild_**
+     * **Build provider:** AWS CodeBuild
 
-**Project name:** BlueGreenWebAppBuild  
+     **_AWS CodeBuild_**
 
-**_Deploy_**
+     * **Project name:** BlueGreenWebAppBuild  
 
-**Deploy provider:** AWS CodeDeploy  
+     **_Deploy_**
 
-**_AWS CodeDeploy_**
+     * **Deploy provider:** AWS CodeDeploy  
 
-**Application name:** BlueGreenWebApp  
-**Deployment group:** BlueGreenWebApp_DeploymentGroup  
+     **_AWS CodeDeploy_**
 
-
+     * **Application name:** BlueGreenWebApp  
+     * **Deployment group:** BlueGreenWebApp_DeploymentGroup  
 
 Click **Next** and **Create pipeline**.
 
