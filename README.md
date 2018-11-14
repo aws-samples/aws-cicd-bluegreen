@@ -1,14 +1,10 @@
-AWS Cicd Bluegreen
-
-Lets customers use Clouformation to create a VPC with ASG and two load balanced web servers. Customer will create a code pipeline to automate a blue/green deployment based on code changes committed to the Code Commit repository.
-
 # CICD with CodePipeline and Blue Green Deployment
 
 Blue-Green is a deployment technique that keep 2 production environments running but only one of the environment is live and one is idle. As you prepare a new version of your software, the current production (Blue) is servering all production traffic. You also have another environment running the new software. Once it has been fully tested (Green), you switch the traffic to route to the Green environment instead of Blue. Now Green is live and Blue is idle.
 
 This technique can reduce the downtime and risks. If there is unexpected issues with Green then you can switch the traffic back to Blue.
 
-# License Summary
+## License Summary
 
 This sample code is made available under a modified MIT license. See the LICENSE file.
 
