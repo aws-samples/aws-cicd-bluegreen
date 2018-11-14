@@ -104,41 +104,41 @@ AWS CodeBuild is a fully managed continuous integration service that compiles so
 
 1. Go to CodeBuild Console and click Create build project. Enter your build project information.
 
-**_Project configuration_**
+     **_Project configuration_**
 
-**Project Name:** BlueGreenWebAppBuild  
-**Description:** NodeJS WebApp build
+     * **Project Name:** BlueGreenWebAppBuild  
+     * **Description:** NodeJS WebApp build
 
-**_Source_**
+     **_Source_**
 
-**Source provider:** AWS CodeCommit  
-**Repository:** BlueGreenWebApp   _Note:_ this is your source reporsitory that you have created earlier.
+     * **Source provider:** AWS CodeCommit  
+     * **Repository:** BlueGreenWebApp   _Note:_ this is your source reporsitory that you have created earlier.
 
-**_Environment_**
+     **_Environment_**
 
-In this step, we configure the build environment.
+     In this step, we configure the build environment.
 
-**Environment image:** Managed image  
-**Operating system:** Ubuntu  
-**Runtime:** Node.js  
-**Runtime version:** aws/codebuild/nodejs:10.1.0  
-**Image version:** Always use the latest image for this runtime version  
-**Service role:** New service role  
-**Role name:** codebuild-BlueGreenWebAppBuild-service-role  (Automatically filled)  
+     * **Environment image:** Managed image  
+     * **Operating system:** Ubuntu  
+     * **Runtime:** Node.js  
+     * **Runtime version:** aws/codebuild/nodejs:10.1.0  
+     * **Image version:** Always use the latest image for this runtime version  
+     * **Service role:** New service role  
+     * **Role name:** codebuild-BlueGreenWebAppBuild-service-role  (Automatically filled)  
 
-**_Buildspec_**
+     **_Buildspec_**
 
-**Build specifications:** Use a buildspec file  
-**Buildspec name:** empty   _Note:_ We will be using buildspec.yml which is in the project. Because we are using defualt name, we can leave this field empty.
+     * **Build specifications:** Use a buildspec file  
+     * **Buildspec name:** empty   _Note:_ We will be using buildspec.yml which is in the project. Because we are using defualt name, we can leave this field empty.
 
-**_Artifacts_**
+     **_Artifacts_**
 
-**Type:** Amazon S3  Note: We will store build output in S3 bucket.  
-**Bucket Name:** build-artifact-bluegreenbucket-us-east-1   Note: This bucket was created with CloudFormation template.  
-**Name:** BlueGreenWebAppBuild.zip  
-**Artifacts packaging:** Zip  
+     * **Type:** Amazon S3  Note: We will store build output in S3 bucket.  
+     * **Bucket Name:** build-artifact-bluegreenbucket-us-east-1   Note: This bucket was created with CloudFormation template.  
+     * **Name:** BlueGreenWebAppBuild.zip  
+     * **Artifacts packaging:** Zip  
 
-Click **Create build project**
+     Click **Create build project**
 
 2. In your Build Project, click **Start build**. Leave everything with defualt value, click **Start build**
 3. Observe the build process and logs. When completed, click **View artifacts** link in the Build status section which should take you to the build output zip file in your build artifact S3 bucket.
@@ -150,46 +150,47 @@ AWS CodeDeploy is a fully managed deployment service that automates software dep
 
 1. Go to CodeDeploy Console, click **Create application**. Enter Application configuration and click **Create application**
 
-**Application name:** BlueGreenWebApp  
-**Compute platform:** EC2/On-premises  
+     * **Application name:** BlueGreenWebApp  
+     * **Compute platform:** EC2/On-premises  
 
 2. In your CodeDeploy Application, BlueGreenWebApp, on Deployment groups tab, click **Create Deployment group**. Configure the deployment as follow:
 
-**_Deployment group name_**
+     **_Deployment group name_**
 
-**Enter a deployment group name:** BlueGreenWebApp_DeploymentGroup  
-**Service role:** BlueGreenEnvironment-DeployTrustRole-xxxxxxxx    Note: This role was created as a part of CloudFormation.
+     * **Enter a deployment group name:** BlueGreenWebApp_DeploymentGroup  
+     * **Service role:** BlueGreenEnvironment-DeployTrustRole-xxxxxxxx    Note: This role was created as a part of CloudFormation.
 
-**_Deployment type_**
+     **_Deployment type_**
 
-**Choose how to deploy your application:** Blue/green
+     * **Choose how to deploy your application:** Blue/green
 
-**_Environment configuration_**
+     **_Environment configuration_**
 
-**Specify the Amazon EC2 Auto Scaling groups or Amazon EC2 instances where the current application revision is deployed:** Automatically copy Amazon EC2 Auto Scaling group  
-**Choose the Amazon EC2 Auto Scaling group where the current application revision is deployed:** BlueGreenASGroup  _Note:_ This AS was created as a part of CloudFormation.
+     * **Specify the Amazon EC2 Auto Scaling groups or Amazon EC2 instances where the current application revision is deployed:** Automatically copy Amazon EC2 Auto Scaling group  
+     * **Choose the Amazon EC2 Auto Scaling group where the current application revision is deployed:** BlueGreenASGroup  _Note:_ This AS was created as a part of CloudFormation.
 
-**_Deployment settings_**
+     **_Deployment settings_**
 
-**Choose whether traffic reroutes to the replacement environment immediately or waits for you to start the rerouting process manually:** Reroute traffic immediately  
-**Choose whether instances in the original environment are terminated after the deployment is succeeds, and how long to wait before termination:** Terminate the original instances in the deployment group: 5 Minutes  
-**Deployment configuration:** CodeDeployDefault.AllAtOnce  
+     * **Choose whether traffic reroutes to the replacement environment immediately or waits for you to start the rerouting process manually:** Reroute traffic immediately  
+     * **Choose whether instances in the original environment are terminated after the deployment is succeeds, and how long to wait before termination:** Terminate the original      instances in the deployment group: 5 Minutes  
+     * **Deployment configuration:** CodeDeployDefault.AllAtOnce  
 
-**_Load balancer_**
+     **_Load balancer_**
 
-**Application Load Balancer or Network Load Balancer**
-**Choose a load balancer:** BlueGreenTG    _Note:_ This role was created as a part of CloudFormation.  
+     * **Application Load Balancer or Network Load Balancer**
+     * **Choose a load balancer:** BlueGreenTG    _Note:_ This role was created as a part of CloudFormation.  
 
-Click **Create deployment group**
+     Click **Create deployment group**
 
 3. Under the deployment group, click **Create deployment**.  Configure the deployment as followed:
 
      **_Deployment settings_**
-     
-       **Deployment group:** BlueGreenWebApp_DeploymentGroup  
-       **Revision type:** My application is stored in Amazon S3  
-       **Revision location:** s3://build-artifact-bluegreenbucket-us-east-1/BlueGreenWebAppBuild.zip   Note: This is the location of the build artifact from your CodeBuild         project.  
-       **Revision file type:** .zip  
+
+     * **Deployment group:** BlueGreenWebApp_DeploymentGroup  
+     * **Revision type:** My application is stored in Amazon S3  
+     * **Revision location:** s3://build-artifact-bluegreenbucket-us-east-1/BlueGreenWebAppBuild.zip   Note: This is the location of the build artifact from your CodeBuild         project.  
+     * **Revision file type:** .zip  
+
      Leave everything as the default value.
 
 Click **Create deployment**
@@ -239,7 +240,7 @@ You are going to configure a CodePipleline to use CodeBuild and CodeDeploy previ
      * **Application name:** BlueGreenWebApp  
      * **Deployment group:** BlueGreenWebApp_DeploymentGroup  
 
-Click **Next** and **Create pipeline**.
+     Click **Next** and **Create pipeline**.
 
 2. Observe your existing commit going through CodePipeline.  
 
