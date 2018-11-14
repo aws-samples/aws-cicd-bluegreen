@@ -23,11 +23,9 @@ We will be create a Cloud9 environment to do development. We will use CloudForma
 5. Create Application and Deployment group to deploy the artifact to AutoScaling Group with Blue Green deployment.
 6. Create CICD with CodePipeline.
 
-For Prerequisites, go [here](Prerequisites.md).
-
 Follow the Detail Instruction [here](Detail_Instructions.md).
 
-Resources:
+## Resources
 
-
-[CodeDeploy Example](https://github.com/aws-samples/aws-codedeploy-samples/tree/master/load-balancing/elb-v2)
+1. [Lifecycle event scripts for Application Load Balancers and Network Load Balancers](https://github.com/aws-samples/aws-codedeploy-samples/tree/master/load-balancing/elb-v2)
+2. [AWS DevOps](https://aws.amazon.com/devops/)
