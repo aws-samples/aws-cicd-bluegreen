@@ -255,7 +255,7 @@ You are going to configure a CodePipleline to use CodeBuild and CodeDeploy previ
             <a class="twitter-link" href="http://twitter.com/home/?status=I%20created%20a%20project%20with%20AWS%20CodeStar!%20%23AWS%20%23AWSCodeStar%20https%3A%2F%2Faws.amazon.com%2Fcodestar"><img src="img/tweet.svg" /></a>
             <div class="text">
                 <h1>Congratulations!</h1>
-                <h2>You just created a Node.js web application V3 from re:invent!</h2>
+                <h2>You just created a Node.js web application V2 from re:invent!</h2>
             </div>
         </div>
 ```
