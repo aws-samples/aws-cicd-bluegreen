@@ -184,13 +184,13 @@ Click **Create deployment group**
 
 3. Under the deployment group, click **Create deployment**.  Configure the deployment as followed:
 
-**_Deployment settings_**
-
-**Deployment group:** BlueGreenWebApp_DeploymentGroup  
-**Revision type:** My application is stored in Amazon S3  
-**Revision location:** s3://build-artifact-bluegreenbucket-us-east-1/BlueGreenWebAppBuild.zip   Note: This is the location of the build artifact from your CodeBuild project.  
-**Revision file type:** .zip  
-Leave everything as the default value.
+     **_Deployment settings_**
+     
+         **Deployment group:** BlueGreenWebApp_DeploymentGroup  
+         **Revision type:** My application is stored in Amazon S3  
+         **Revision location:** s3://build-artifact-bluegreenbucket-us-east-1/BlueGreenWebAppBuild.zip   Note: This is the location of the build artifact from your CodeBuild        project.  
+         **Revision file type:** .zip  
+     Leave everything as the default value.
 
 Click **Create deployment**
 
@@ -206,38 +206,38 @@ You are going to configure a CodePipleline to use CodeBuild and CodeDeploy previ
 
 1. Go to CodePipeline Console and click **Create Pipeline**.  Configure your Pipeline as followed:
 
-     **Pipeline name:** BlueGreenWebApp_Pipeline  
-     **Service role:** New service role  
-     **Role name:** AWSCodePipelineServiceRole-us-east-1-BlueGreenWebApp_Pipeline (Automatically filled)  
-     Enable **Allow AWS CodePipeline to create a service role so it can be used with this new pipeline**  
-     **Artifact Store:** Default location  
+       **Pipeline name:** BlueGreenWebApp_Pipeline  
+       **Service role:** New service role  
+       **Role name:** AWSCodePipelineServiceRole-us-east-1-BlueGreenWebApp_Pipeline (Automatically filled)  
+       Enable **Allow AWS CodePipeline to create a service role so it can be used with this new pipeline**  
+       **Artifact Store:** Default location  
      
      **_Source_**
      
-     **Source provider:** AWS CodeCommit
+       **Source provider:** AWS CodeCommit
      
      **_AWS CodeCommit_**
      
-     **Choose a repository:** BlueGreenWebApp  
-     **Branch name:** master  
-     **Change detection options:** Amazon CloudWatch Events(recommended)  
+       **Choose a repository:** BlueGreenWebApp  
+       **Branch name:** master  
+       **Change detection options:** Amazon CloudWatch Events(recommended)  
      
      **_Build_**
      
-     **Build provider:** AWS CodeBuild
+       **Build provider:** AWS CodeBuild
      
      **_AWS CodeBuild_**
      
-     **Project name:** BlueGreenWebAppBuild  
+       **Project name:** BlueGreenWebAppBuild  
      
      **_Deploy_**
      
-     **Deploy provider:** AWS CodeDeploy  
+       **Deploy provider:** AWS CodeDeploy  
      
      **_AWS CodeDeploy_**
      
-     **Application name:** BlueGreenWebApp  
-     **Deployment group:** BlueGreenWebApp_DeploymentGroup  
+       **Application name:** BlueGreenWebApp  
+       **Deployment group:** BlueGreenWebApp_DeploymentGroup  
 
 Click **Next** and **Create pipeline**.
 
