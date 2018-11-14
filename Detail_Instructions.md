@@ -22,7 +22,7 @@ We will be using Cloud9 IDE for our development.
 ## Create Code Commit Credentials
 
 1. Choose an IAM user with sufficient privileges.  For simplicity, you can assign full permisssion to this or a new IAM user.
-2. On the user details page in IAM console, choose the **Security Credentials** tab, and in **HTTPS Git credentials for AWS CodeCommit**, choose **Generate**. 
+2. On the user details page in IAM console, choose the **Security Credentials** tab, and in **HTTPS Git credentials for AWS CodeCommit**, choose **Generate**.
 
 ![HTTPS Git Credential](./images/codecommit-iam-gc1.png)
 
@@ -57,6 +57,7 @@ user:~/environment $ wget https://github.com/aws-samples/aws-cicd-bluegreen/raw/
 user:~/environment $ unzip WebApp.zip
 user:~/environment $ rm WebApp.zip
 ```
+
 Your IDE environment should look like this.
 
 ![Project](./images/bg-3.png)
@@ -68,12 +69,13 @@ user:~/environment/BlueGreenEnvironment/ $ git add .
 user:~/environment/BlueGreenEnvironment/ $ git status
 ```
 
-12.  Commit your change by running **_git commit_** to commit the change to the local repository then run **_git push_** to push your commit the default remote name Git uses for your AWS CodeCommit repository (origin). Enter your git credential.
+12. Commit your change by running **_git commit_** to commit the change to the local repository then run **_git push_** to push your commit the default remote name Git uses for your AWS CodeCommit repository (origin). Enter your git credential.
 
 ```console
 user:~/environment/BlueGreenEnvironment/ $ git commit -m "Initial Commit"
 user:~/environment/BlueGreenEnvironment/ $ git push
 ```
+
 ![Project](./images/bg-4.png)
 
 **_💡 Tip_** After you have pushed files to your AWS CodeCommit repository, you can use the AWS CodeCommit console to view the contents. For more information, see [Browse the Contents of a Repository](http://docs.aws.amazon.com/codecommit/latest/userguide/how-to-browse.html).
@@ -87,6 +89,7 @@ In this step, we will be using CloudFormation template to create infrstructure u
 ```console
 user:~/environment/BlueGreenEnvironment/ $ aws cloudformation create-stack --stack-name BlueGreenEnvironment --template-body file://template.yml --capabilities CAPABILITY_IAM
 ```
+
 **_💡 Tip_** After the stack creation start, you can use the AWS CloudFormation console to view its progress.
 
 ![CloudFormation](./images/bg-5.png)
@@ -138,7 +141,7 @@ In this step, we configure the build environment.
 Click **Create build project**
 
 2. In your Build Project, click **Start build**. Leave everything with defualt value, click **Start build**
-3. Observe the build process and logs. When completed, click **View artifacts** link in the Build status section which should take you to the build output zip file in your build artifact S3 bucket. 
+3. Observe the build process and logs. When completed, click **View artifacts** link in the Build status section which should take you to the build output zip file in your build artifact S3 bucket.
 4. Congratulations! You succesfully made your first build.
 
 ## Configure CodeDeploy
@@ -154,12 +157,12 @@ AWS CodeDeploy is a fully managed deployment service that automates software dep
 
 **_Deployment group name_**
 
-**Enter a deployment group name:** BlueGreenWebApp_DeploymentGroup
+**Enter a deployment group name:** BlueGreenWebApp_DeploymentGroup  
 **Service role:** BlueGreenEnvironment-DeployTrustRole-xxxxxxxx    Note: This role was created as a part of CloudFormation.
 
 **_Deployment type_**
 
-Choose how to deploy your application: Blue/green
+**Choose how to deploy your application:** Blue/green
 
 **_Environment configuration_**
 
@@ -175,7 +178,7 @@ Choose how to deploy your application: Blue/green
 **_Load balancer_**
 
 **Application Load Balancer or Network Load Balancer**
-**Choose a load balancer:** BlueGreenTG   _Note:_ This role was created as a part of CloudFormation.  
+**Choose a load balancer:** BlueGreenTG    _Note:_ This role was created as a part of CloudFormation.  
 
 Click **Create deployment group**
 
@@ -203,38 +206,38 @@ You are going to configure a CodePipleline to use CodeBuild and CodeDeploy previ
 
 1. Go to CodePipeline Console and click **Create Pipeline**.  Configure your Pipeline as followed:
 
-**Pipeline name:** BlueGreenWebApp_Pipeline  
-**Service role:** New service role  
-**Role name:** AWSCodePipelineServiceRole-us-east-1-BlueGreenWebApp_Pipeline (Automatically filled)  
-Enable **Allow AWS CodePipeline to create a service role so it can be used with this new pipeline**  
-**Artifact Store:** Default location  
-
-**_Source_**
-
-**Source provider:** AWS CodeCommit
-
-**_AWS CodeCommit_**
-
-**Choose a repository:** BlueGreenWebApp  
-**Branch name:** master  
-**Change detection options:** Amazon CloudWatch Events(recommended)  
-
-**_Build_**
-
-**Build provider:** AWS CodeBuild
-
-**_AWS CodeBuild_**
-
-**Project name:** BlueGreenWebAppBuild  
-
-**_Deploy_**
-
-**Deploy provider:** AWS CodeDeploy  
-
-**_AWS CodeDeploy_**
-
-**Application name:** BlueGreenWebApp  
-**Deployment group:** BlueGreenWebApp_DeploymentGroup  
+     **Pipeline name:** BlueGreenWebApp_Pipeline  
+     **Service role:** New service role  
+     **Role name:** AWSCodePipelineServiceRole-us-east-1-BlueGreenWebApp_Pipeline (Automatically filled)  
+     Enable **Allow AWS CodePipeline to create a service role so it can be used with this new pipeline**  
+     **Artifact Store:** Default location  
+     
+     **_Source_**
+     
+     **Source provider:** AWS CodeCommit
+     
+     **_AWS CodeCommit_**
+     
+     **Choose a repository:** BlueGreenWebApp  
+     **Branch name:** master  
+     **Change detection options:** Amazon CloudWatch Events(recommended)  
+     
+     **_Build_**
+     
+     **Build provider:** AWS CodeBuild
+     
+     **_AWS CodeBuild_**
+     
+     **Project name:** BlueGreenWebAppBuild  
+     
+     **_Deploy_**
+     
+     **Deploy provider:** AWS CodeDeploy  
+     
+     **_AWS CodeDeploy_**
+     
+     **Application name:** BlueGreenWebApp  
+     **Deployment group:** BlueGreenWebApp_DeploymentGroup  
 
 Click **Next** and **Create pipeline**.
 

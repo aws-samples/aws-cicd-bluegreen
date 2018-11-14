@@ -21,7 +21,7 @@ We will be create a Cloud9 environment to do development. We will use CloudForma
 3. Create infrastructure (ALB, ASG, EC2 and S3).
 4. Create Build project with CodeBuild and store build artifact in S3.
 5. Create Application and Deployment group to deploy the artifact to AutoScaling Group with Blue Green deployment.
-6. Create CICD with CodePipeline
+6. Create CICD with CodePipeline.
 
 For Prerequisites, go [here](Prerequisites.md).
 
