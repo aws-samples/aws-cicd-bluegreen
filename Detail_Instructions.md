@@ -271,7 +271,7 @@ user:~/environment/BlueGreenEnvironment/ $ git push
 
 ## Clean up Instruction
 
-1. Go to EC2 Console and navigate to Auto Scaling Groups. Select CodeDeploy_dev314_d-XXXXXXXXX, click Actions and select Delete.
-2. Go to CloudFormation console, select bgcicd or the stackname that you created. Click Actions and select Delete Stack.
+1. Go to EC2 Console and navigate to Auto Scaling Groups. Select CodeDeploy_BlueGreenWebApp_DeploymentGroup-XXXXXXXXX, click Actions and select Delete. (There may be more than one Auto Scaling Group with the naming convention CodeDeploy_BlueGreenWebApp_DeploymentGroup-XXXXXXXXX, Delete all that exist with this naming convention)
+2. Go to CloudFormation console, select the stack name BlueGreenEnvironment or the stackname that you created. Click Actions and select Delete Stack.
 3. Go to CodeBuild, CodeDeploy and CodePipeline console.  Delete the resource that you have created.
 4. Go to IAM Console and delete CodeDeploy role, CodePipeline roles and CodePipeline Policies. Search for BuleGreenWebApp.
