@@ -184,7 +184,7 @@ user:~/environment/BlueGreenEnvironment/ $ aws cloudformation create-stack --sta
 
      * **Deployment group:** BlueGreenWebApp_DeploymentGroup  
      * **Revision type:** My application is stored in Amazon S3  
-     * **Revision location:** s3://build-artifact-bluegreenbucket-us-east-1/BlueGreenWebAppBuild.zip   Note: This is the location of the build artifact from your CodeBuild         project.  
+     * **Revision location:** s3://build-artifact-bluegreenbucket-us-east-1-XXXXXXXXXXXX/BlueGreenWebAppBuild.zip   Note: This is the location of the build artifact from your CodeBuild project.  
      * **Revision file type:** .zip  
 
      Leave everything as the default value.
@@ -271,7 +271,8 @@ user:~/environment/BlueGreenEnvironment/ $ git push
 
 ## Clean up Instruction
 
-1. Go to EC2 Console and navigate to Auto Scaling Groups. Select CodeDeploy_BlueGreenWebApp_DeploymentGroup-XXXXXXXXX, click Actions and select Delete. (There may be more than one Auto Scaling Group with the naming convention CodeDeploy_BlueGreenWebApp_DeploymentGroup-XXXXXXXXX, Delete all that exist with this naming convention)
-2. Go to CloudFormation console, select the stack name BlueGreenEnvironment or the stackname that you created. Click Actions and select Delete Stack.
-3. Go to CodeBuild, CodeDeploy and CodePipeline console.  Delete the resource that you have created.
-4. Go to IAM Console and delete CodeDeploy role, CodePipeline roles and CodePipeline Policies. Search for BuleGreenWebApp.
+1. Go to EC2 Console and navigate to Auto Scaling Groups. Select CodeDeploy_BlueGreenWebApp_DeploymentGroup-XXXXXXXXXXXX, click Actions and select Delete. (There may be more than one Auto Scaling Group with the naming convention CodeDeploy_BlueGreenWebApp_DeploymentGroup-XXXXXXXXXXXX, Delete all that exist with this naming convention)
+2. Go to S3 Console and empty bucket build-artifact-bluegreenbucket-us-east-1-XXXXXXXXXXXX and empty and delete bucket codepipeline-region-XXXXXXXXXXX.
+3. Go to CloudFormation console, select the stack name BlueGreenEnvironment or the stackname that you created. Click Actions and select Delete Stack.
+4. Go to CodeCommit, CodeBuild, CodeDeploy and CodePipeline console.  Delete the resource that you have created.
+5. Go to IAM Console and delete CodeDeploy role, CodePipeline roles and CodePipeline Policies. Search for BuleGreenWebApp.
