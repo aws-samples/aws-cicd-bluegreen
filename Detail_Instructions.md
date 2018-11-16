@@ -130,7 +130,7 @@ user:~/environment/BlueGreenEnvironment/ $ aws cloudformation create-stack --sta
      **_Artifacts_**
 
      * **Type:** Amazon S3  Note: We will store build output in S3 bucket.  
-     * **Bucket Name:** build-artifact-bluegreenbucket-us-east-1   Note: This bucket was created with CloudFormation template.  
+     * **Bucket Name:** build-artifact-bluegreenbucket-us-east-1-xxxxxxxxxxx   Note: This bucket was created with CloudFormation template and can be copied fro the Outputs section of the stack.  
      * **Name:** BlueGreenWebAppBuild.zip  
      * **Artifacts packaging:** Zip  
 
