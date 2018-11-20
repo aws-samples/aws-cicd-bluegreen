@@ -10,9 +10,6 @@ files:
   - source: /public/
     destination: /home/ec2-user/node-website/public
 hooks: 
-  ApplicationStop:
-    - location: scripts/deregister_from_elb.sh
-      timeout: 180
   BeforeInstall:
     - location: scripts/stop_server.sh
       timeout: 180  
@@ -21,6 +18,3 @@ hooks:
   AfterInstall:
     - location: scripts/start_server.sh
       timeout: 180      
-  ApplicationStart:
-    - location: scripts/register_with_elb.sh
-      timeout: 180

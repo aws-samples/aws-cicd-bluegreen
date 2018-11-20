@@ -24,8 +24,3 @@ We will be create a Cloud9 environment to do development. We will use CloudForma
 6. Create CICD with CodePipeline.
 
 Follow the Detail Instruction [here](Detail_Instructions.md).
-
-## Resources
-
-1. [Lifecycle event scripts for Application Load Balancers and Network Load Balancers](https://github.com/aws-samples/aws-codedeploy-samples/tree/master/load-balancing/elb-v2)
-2. [AWS DevOps](https://aws.amazon.com/devops/)
