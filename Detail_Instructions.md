@@ -4,16 +4,22 @@
 
 > AWS Cloud9 is a cloud-based integrated development environment (IDE) that lets you write, run, and debug your code with just a browser. It includes a code editor, debugger, and terminal. Cloud9 comes prepackaged with essential tools for popular programming languages, including JavaScript, Python, PHP, and more, so you don’t need to install files or configure your development machine to start new projects. Since your Cloud9 IDE is cloud-based, you can work on your projects from your office, home, or anywhere using an internet-connected machine. Cloud9 also provides a seamless experience for developing serverless applications enabling you to easily define resources, debug, and switch between local and remote execution of serverless applications. With Cloud9, you can quickly share your development environment with your team, enabling you to pair program and track each other's inputs in real time.
 
-Note: For this lab you will need to use an IAM user and not a federated user account or root account. See the [Prerequisites](./Prerequisites.md)
+Note: 
+1. For this lab you will need to use an IAM user and not a federated user account or root account. See the [Prerequisites](./Prerequisites.md)
+2. Only us-east-1(N.VA), us-east-2(Ohio), us-west-2(Oregon) and eu-west-1(Irland) are supported.
 
 1. Go to the AWS Management Console, click **Services** then select **Cloud9** under Developer Tools.
 2. Click **Create environment**.
-3. Enter `BlueGreenEnvironment` into **Name** and optionally provide a **Description**.
+3. Enter **_BlueGreenEnvironment_** into **Name** and optionally provide a **Description**.
 4. Click **Next step**.
 5. You may leave **Environment settings** at their defaults of launching a new **t2.micro** EC2 instance which will be paused after **30 minutes** of inactivity.
 6. Click **Next step**.
 7. Review the environment settings and click **Create environment**. It will take several minutes for your environment to be provisioned and prepared.
-8. Once ready, your IDE will open to a welcome screen. Below that, you should see a terminal prompt similar to: ![setup](./img/setup-cloud9-terminal.png) You can run AWS CLI commands in here just like you would on your local computer. Verify that your user is logged in by running `aws sts get-caller-identity`.
+8. Once ready, your IDE will open to a welcome screen. Below that, you should see a terminal prompt. You can run AWS CLI commands in here just like you would on your local computer. Verify that your user is logged in by running this command.
+
+```console
+user:~/environment $ aws sts get-caller-identity
+```
 
 ![Cloud9](./images/bg-1.png)
 
@@ -21,7 +27,7 @@ We will be using Cloud9 IDE for our development.
 
 ## Create Code Commit Credentials
 
-1. Choose an IAM user with sufficient privileges.  For simplicity, you can assign full permisssion to this or a new IAM user.
+1. Go to IAM Console and click **User** on the left menu. Click the Username of the IAM user which you are currently logging on with.
 2. On the user details page in IAM console, choose the **Security Credentials** tab, and in **HTTPS Git credentials for AWS CodeCommit**, choose **Generate**.
 
 ![HTTPS Git Credential](./images/codecommit-iam-gc1.png)
@@ -35,9 +41,9 @@ Note: Make Note of the Git HTTP credentials handy. It will be used for cloning a
 3. On the Welcome page, choose Get Started Now. (If a **_Dashboard_** page appears instead, choose **_Create repository_**.)
 4. On the **Create repository** page, in the **Repository name** box, type **_BlueGreenWebApp_**.
 5. In the **Description** box, type **_BlueGreenWebApp repository_**.
-6. Click **Create repository** to create an empty AWS CodeCommit repository named **_BlueGreenWebApp_**.
-7. On the successful screen of creating **_BlueGreenWebApp_**, review Connection steps. In the step 3, click Copy to copy the Clone command.
-8. Go to your Cloud9 IDE you created in the previous step.  In the terminal prompt paste clone command you previouly copied. Enter Username and Password of your Git Credential.
+6. Click **Create repository** to create an empty AWS CodeCommit repository.
+7. On the **Connection Steps** screen, review Connection steps. We completed step 2 from the previous section. On the step 3, click **Copy** to copy the Clone command.
+8. Go to your Cloud9 IDE.  In the terminal prompt paste clone command you previouly copied. Enter Username and Password of your Git Credential. (You will not see the password when you pasted it. Do not worry! Hit Enter.)
 
 ![Cloned Repo](./images/bg-2.png)
 
@@ -62,7 +68,7 @@ Your IDE environment should look like this.
 
 ![Project](./images/bg-3.png)
 
-11. Stage your change by running **_git add_**. You can use **_git status_** to review the change.
+11. Stage your change by running **_git add_**. You can use **_git status_** to review the changes.
 
 ```console
 user:~/environment/BlueGreenEnvironment/ $ git add .

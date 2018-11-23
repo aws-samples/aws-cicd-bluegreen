@@ -13,6 +13,8 @@ This sample includes:
 * app.js - this file contains the code for your application
 * appspec.yml - this file is used by AWS CodeDeploy when deploying the web
   application to EC2
+* buildspec.yml - this file is a collection of build commands and related settings that
+  AWS CodeBuild uses to run a build
 * package.json - this file contains various metadata relevant to your Node.js
   application such as dependencies
 * public/ - this directory contains static web assets used by your application

@@ -75,14 +75,14 @@ Mappings:
       HVM64: ami-0ff8a91507f77f867
       HVMG2: ami-0a584ac55a7631c0c
     us-west-2:
-      HVM64: ami-0303c7b2e7066b60d
-      HVMG2: ami-0e09505bc235aa82d
+      HVM64: ami-0bb5806b2e825a199
+      HVMG2: ami-01bbe152bf19d0289
     us-west-1:
       HVM64: ami-0bdb828fd58c52235
       HVMG2: ami-066ee5fd4a9ef77f1
     eu-west-1:
-      HVM64: ami-047bb4163c506cd98
-      HVMG2: ami-0a7c483d527806435
+      HVM64: ami-031a3db8bacbcdc20
+      HVMG2: ami-09693313102a30b2c
     eu-west-2:
       HVM64: ami-f976839e
       HVMG2: NOT_SUPPORTED
@@ -102,8 +102,8 @@ Mappings:
       HVM64: ami-0d98120a9fb693f07
       HVMG2: NOT_SUPPORTED
     ap-southeast-1:
-      HVM64: ami-08569b978cc4dfa10
-      HVMG2: ami-0be9df32ae9f92309
+      HVM64: ami-07ad70c269d8a418c
+      HVMG2: ami-0b84d2c53ad5250c2
     ap-southeast-2:
       HVM64: ami-09b42976632b27e9b
       HVMG2: ami-0a9ce9fecc3d1daf8
