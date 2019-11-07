@@ -407,6 +407,7 @@ Resources:
         - 'arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess'
         - 'arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess'
         - 'arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM'
+        - 'arn:aws:iam::aws:policy/AWSCloudFormationReadOnlyAccess'
       Path: /
   S3EncryptionRolePolicies:
     Type: 'AWS::IAM::Policy'
@@ -455,12 +456,12 @@ Resources:
     CreationPolicy:
       ResourceSignal:
         Count: '2'
-        Timeout: PT15M
+        Timeout: PT5M
     UpdatePolicy:
       AutoScalingRollingUpdate:
         MinInstancesInService: '1'
         MaxBatchSize: '1'
-        PauseTime: PT15M
+        PauseTime: PT10M
         WaitOnResourceSignals: 'true'
   LaunchConfig:
     Type: AWS::AutoScaling::LaunchConfiguration
@@ -496,6 +497,10 @@ Resources:
                     - stack=
                     - Ref: 'AWS::StackId'
                     - |+
+                    
+                    - role=
+                    - Ref: 'WebAppRole'
+                    - |+                    
 
                     - region=
                     - Ref: 'AWS::Region'
@@ -518,6 +523,8 @@ Resources:
                     - '         --stack '
                     - Ref: 'AWS::StackName'
                     - '         --resource LaunchConfig '
+                    - '         --role '
+                    - Ref: 'WebAppRole'                    
                     - '         --region '
                     - Ref: 'AWS::Region'
                     - |+
@@ -589,6 +596,8 @@ Resources:
               - '         --stack '
               - Ref: 'AWS::StackName'
               - '         --resource LaunchConfig '
+              - '         --role '
+              - Ref: 'WebAppRole'
               - '         --region '
               - Ref: 'AWS::Region'
               - |+
@@ -745,4 +754,4 @@ Outputs:
   ASGroup:
     Value: 
       Ref: WebServerGroup
-    Description: AutoScaling Group Name                
+    Description: AutoScaling Group Name        
