@@ -61,6 +61,8 @@ user:~/environment $ git config credential.helper store
 ```console
 user:~/environment $ wget https://github.com/aws-samples/aws-cicd-bluegreen/raw/master/WebApp.zip
 user:~/environment $ unzip WebApp.zip
+user:~/environment $ mv WebApp/* .
+user:~/environment $ rm WebApp
 user:~/environment $ rm WebApp.zip
 ```
 
@@ -122,8 +124,10 @@ user:~/environment/BlueGreenEnvironment/ $ aws cloudformation create-stack --sta
 
      * **Environment image:** Managed image  
      * **Operating system:** Ubuntu  
-     * **Runtime:** Node.js  
-     * **Runtime version:** aws/codebuild/nodejs:10.1.0  
+     * **Runtime(s):** Standard
+     * **Image:** aws/codebuild/standard:2.0
+     * **Image version:** Always use the latest image for this runtime version
+     * **Environment type: Linux
      * **Image version:** Always use the latest image for this runtime version  
      * **Service role:** New service role  
      * **Role name:** codebuild-BlueGreenWebAppBuild-service-role  (Automatically filled)  
@@ -131,7 +135,7 @@ user:~/environment/BlueGreenEnvironment/ $ aws cloudformation create-stack --sta
      **_Buildspec_**
 
      * **Build specifications:** Use a buildspec file  
-     * **Buildspec name:** empty   _Note:_ We will be using buildspec.yml which is in the project. Because we are using defualt name, we can leave this field empty.
+     * **Buildspec name:** empty   _Note:_ We will be using buildspec.yml which is in the project. Because we are using default name, we can leave this field empty.
 
      **_Artifacts_**
 
