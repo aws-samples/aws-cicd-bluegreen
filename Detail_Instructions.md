@@ -127,8 +127,7 @@ user:~/environment/BlueGreenEnvironment/ $ aws cloudformation create-stack --sta
      * **Runtime(s):** Standard
      * **Image:** aws/codebuild/standard:2.0
      * **Image version:** Always use the latest image for this runtime version
-     * **Environment type: Linux
-     * **Image version:** Always use the latest image for this runtime version  
+     * **Environment type:** Linux
      * **Service role:** New service role  
      * **Role name:** codebuild-BlueGreenWebAppBuild-service-role  (Automatically filled)  
 
