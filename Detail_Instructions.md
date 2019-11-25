@@ -284,4 +284,4 @@ user:~/environment/BlueGreenEnvironment/ $ git push
 2. Go to S3 Console and empty bucket build-artifact-bluegreenbucket-us-east-1-XXXXXXXXXXXX and empty and delete bucket codepipeline-region-XXXXXXXXXXX.
 3. Go to CloudFormation console, select the stack name BlueGreenEnvironment or the stackname that you created. Click Actions and select Delete Stack.
 4. Go to CodeCommit, CodeBuild, CodeDeploy and CodePipeline console.  Delete the resource that you have created.
-5. Go to IAM Console and delete CodeDeploy role, CodePipeline roles and CodePipeline Policies. Search for BuleGreenWebApp.
+5. Go to IAM Console and delete CodeDeploy role, CodePipeline roles and CodePipeline Policies. Search for BlueGreenWebApp.
