@@ -61,6 +61,8 @@ user:~/environment $ git config credential.helper store
 ```console
 user:~/environment $ wget https://github.com/aws-samples/aws-cicd-bluegreen/raw/master/WebApp.zip
 user:~/environment $ unzip WebApp.zip
+user:~/environment $ mv WebApp/* .
+user:~/environment $ rm WebApp
 user:~/environment $ rm WebApp.zip
 ```
 
@@ -122,16 +124,17 @@ user:~/environment/BlueGreenEnvironment/ $ aws cloudformation create-stack --sta
 
      * **Environment image:** Managed image  
      * **Operating system:** Ubuntu  
-     * **Runtime:** Node.js  
-     * **Runtime version:** aws/codebuild/nodejs:10.1.0  
-     * **Image version:** Always use the latest image for this runtime version  
+     * **Runtime(s):** Standard
+     * **Image:** aws/codebuild/standard:2.0
+     * **Image version:** Always use the latest image for this runtime version
+     * **Environment type:** Linux
      * **Service role:** New service role  
      * **Role name:** codebuild-BlueGreenWebAppBuild-service-role  (Automatically filled)  
 
      **_Buildspec_**
 
      * **Build specifications:** Use a buildspec file  
-     * **Buildspec name:** empty   _Note:_ We will be using buildspec.yml which is in the project. Because we are using defualt name, we can leave this field empty.
+     * **Buildspec name:** empty   _Note:_ We will be using buildspec.yml which is in the project. Because we are using default name, we can leave this field empty.
 
      **_Artifacts_**
 
@@ -281,4 +284,4 @@ user:~/environment/BlueGreenEnvironment/ $ git push
 2. Go to S3 Console and empty bucket build-artifact-bluegreenbucket-us-east-1-XXXXXXXXXXXX and empty and delete bucket codepipeline-region-XXXXXXXXXXX.
 3. Go to CloudFormation console, select the stack name BlueGreenEnvironment or the stackname that you created. Click Actions and select Delete Stack.
 4. Go to CodeCommit, CodeBuild, CodeDeploy and CodePipeline console.  Delete the resource that you have created.
-5. Go to IAM Console and delete CodeDeploy role, CodePipeline roles and CodePipeline Policies. Search for BuleGreenWebApp.
+5. Go to IAM Console and delete CodeDeploy role, CodePipeline roles and CodePipeline Policies. Search for BlueGreenWebApp.
