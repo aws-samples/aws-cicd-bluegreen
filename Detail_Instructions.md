@@ -42,7 +42,7 @@ Note: Make Note of the Git HTTP credentials handy. It will be used for cloning a
 4. On the **Create repository** page, in the **Repository name** box, type **_BlueGreenWebApp_**.
 5. In the **Description** box, type **_BlueGreenWebApp repository_**.
 6. Click **Create repository** to create an empty AWS CodeCommit repository.
-7. On the **Connection Steps** screen, review Connection steps. We completed step 2 from the previous section. On the step 3, click **Copy** to copy the Clone command.
+7. On the **Connection Steps** screen, review Connection steps. We completed step 2 from the previous section. Select the **Clone URL** drop-down list to copy the Clone HTTPS command.
 8. Go to your Cloud9 IDE.  In the terminal prompt paste clone command you previouly copied. Enter Username and Password of your Git Credential. (You will not see the password when you pasted it. Do not worry! Hit Enter.)
 
 ![Cloned Repo](./images/bg-2.png)
@@ -62,7 +62,7 @@ user:~/environment $ git config credential.helper store
 user:~/environment $ wget https://github.com/aws-samples/aws-cicd-bluegreen/raw/master/WebApp.zip
 user:~/environment $ unzip WebApp.zip
 user:~/environment $ mv WebApp/* .
-user:~/environment $ rm WebApp
+user:~/environment $ rm -rf WebApp
 user:~/environment $ rm WebApp.zip
 ```
 
@@ -95,7 +95,7 @@ In this step, we will be using CloudFormation template to create infrstructure u
 1. In Cloud9, create CloudFormation stack by running this command. If the command execute with no issues, you should see the StackId return back.
 
 ```console
-user:~/environment/BlueGreenEnvironment/ $ aws cloudformation create-stack --stack-name BlueGreenEnvironment --template-body file://template.yml --capabilities CAPABILITY_IAM
+user:~/environment/BlueGreenEnvironment/BlueGreenWebApp $ aws cloudformation create-stack --stack-name BlueGreenEnvironment --template-body file://template.yml --capabilities CAPABILITY_IAM
 ```
 
 2. Go to AWS CloudFormation console to view its progress.  Once complete, go to Outputs Tab and observe the Cloudformation output value. Browse the URL of your ALB, in your favorite browser.
